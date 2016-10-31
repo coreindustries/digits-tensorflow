@@ -1,1 +1,1 @@
-nvidia-docker run -it --rm --name digits -v /media/corey/raid/projects:/projects coreindustries/digits-tensorflow
+nvidia-docker run -it -p 8888:8888 --rm --name digits -v /media/corey/raid/projects:/projects coreindustries/digits-tensorflow
