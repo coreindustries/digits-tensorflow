@@ -59,7 +59,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-numpy \
         python-pip \
         python-scipy \
-        libhdf5-dev 
+        libhdf5-dev \
+        swig
 
 ENV CAFFE_ROOT=/opt/caffe
 WORKDIR $CAFFE_ROOT
@@ -129,6 +130,9 @@ WORKDIR /opt/digits
 #
 # https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/docker/Dockerfile.gpu
 #
+# CUDA 8 / cuDNN 4
+## http://textminingonline.com/dive-into-tensorflow-part-iii-gtx-1080-ubuntu16-04-cuda8-0-cudnn5-0-tensorflow
+
 MAINTAINER Craig Citro <craigcitro@google.com>
 
 # Pick up some TF dependencies
@@ -144,8 +148,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         rsync \
         software-properties-common \
         unzip \
+        default-jre \
+        default-jdk \
         && \
     apt-get clean
+
+WORKDIR /opt
+
+RUN wget https://github.com/bazelbuild/bazel/releases/download/0.3.0/bazel-0.3.0-installer-linux-x86_64.sh && chmod +x bazel-0.3.0-installer-linux-x86_64.sh && ./bazel-0.3.0-installer-linux-x86_64.sh --user
 
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
@@ -184,6 +194,11 @@ COPY notebooks /notebooks
 #   https://github.com/ipython/ipython/issues/7062
 # We just add a little wrapper script.
 COPY run_jupyter.sh /
+
+
+# Make it easy to find things
+RUN ln -s /usr/local/lib/python2.7/dist-packages/tensorflow/ /root/tensorflow
+
 
 # TensorBoard
 EXPOSE 6006
