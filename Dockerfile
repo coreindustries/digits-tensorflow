@@ -184,6 +184,10 @@ RUN pip --no-cache-dir install \
     http://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-${TENSORFLOW_VERSION}-cp27-none-linux_x86_64.whl
 # --- ~ DO NOT EDIT OR DELETE BETWEEN THE LINES --- #
 
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64"
+ENV CUDA_HOME=/usr/local/cuda
+
+
 # Set up our notebook config.
 COPY jupyter_notebook_config.py /root/.jupyter/
 
@@ -209,6 +213,6 @@ WORKDIR "/notebooks"
 
 CMD ["/run_jupyter.sh"]
 
-
+# ImportError: libcudart.so.7.5: cannot open shared object file: No such file or directory
 
 RUN rm -rf /var/lib/apt/lists/*
